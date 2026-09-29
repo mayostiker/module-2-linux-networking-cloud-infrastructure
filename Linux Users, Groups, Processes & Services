@@ -1,1 +1,199 @@
+#  Linux Users, Groups, Process Management & Services
+## Objective
 
+The objective was to learn how Linux manages users and groups, understand running processes, and manage system services.
+
+The practical exercises were performed using Ubuntu running through Windows Subsystem for Linux (WSL).
+
+---
+
+## 1. Linux Users
+
+Linux is a multi-user operating system. Multiple users can have accounts on the same Linux system, with different permissions and levels of access.
+
+I used the following command to identify the current user:
+
+```bash
+whoami
+The id command displays information about a user, including:
+
+User ID (UID)
+Group ID (GID)
+Group memberships
+2. Creating a Linux User
+
+I created a practice user called intern using:
+
+sudo adduser intern
+
+Ubuntu created the user's home directory and primary group.
+
+I verified the user using:
+
+id intern
+
+The result showed:
+
+uid=1003(intern) gid=1003(intern) groups=1003(intern),100(users)
+
+The exact UID and GID are system-specific.
+
+Understanding UID and GID
+UID — User ID, a numerical identifier assigned to a Linux user.
+GID — Group ID, a numerical identifier assigned to a Linux group.
+3. Linux User Home Directories
+
+I checked the /home directory using:
+
+ls /home
+
+The intern user's home directory was created at:
+
+/home/intern
+
+I also used:
+
+ls -la /home/intern
+
+to inspect the contents of the user's home directory.
+
+4. Linux Groups
+
+Linux groups make it easier to manage permissions for multiple users.
+
+Instead of assigning permissions individually to many users, users can be placed into a group and permissions can be assigned to the group.
+
+For example:
+
+developers
+├── User 1
+├── User 2
+└── User 3
+5. Creating a Group
+
+I created a group called developers using:
+
+sudo groupadd developers
+
+I verified the group using:
+
+getent group developers
+6. Adding a User to a Group
+
+I added the intern user to the developers group using:
+
+sudo usermod -aG developers intern
+
+The -aG options append the specified group to the user's supplementary groups.
+
+I verified the user's group memberships using:
+
+groups intern
+
+The user was shown as a member of the developers group.
+
+7. Linux Processes
+
+A process is a running instance of a program.
+
+Examples of programs that can run as processes include:
+
+Shells
+Web servers
+Applications
+Databases
+System utilities
+
+Each process has a unique Process ID (PID).
+
+8. Viewing Processes with ps
+
+I used:
+
+ps
+
+to display processes associated with the current terminal/session.
+
+I also used:
+
+ps aux
+
+to display a more detailed list of running processes.
+
+Important information displayed by process-management commands can include:
+
+User
+Process ID (PID)
+CPU usage
+Memory usage
+Running command
+9. Monitoring Processes with top
+
+I used:
+
+top
+
+to monitor running processes in real time.
+
+top provides information such as:
+
+CPU usage
+Memory usage
+Process IDs
+Running processes
+System activity
+
+I exited the top interface using:
+
+q
+10. Process Termination
+
+Linux provides the kill command to send a signal to a process.
+
+The general syntax is:
+
+kill PID
+
+For example:
+
+kill 1234
+
+where 1234 represents the PID of the process.
+
+Processes should only be terminated when the administrator understands what the process is and what effect stopping it may have.
+
+11. Linux Services
+
+A service is a program that runs in the background and provides functionality to the operating system or other applications.
+
+Examples include:
+
+SSH
+Web servers
+Database services
+Other system services
+
+Linux systems using systemd commonly use systemctl to manage services.
+
+12. Managing Services with systemctl
+Check service status
+systemctl status service-name
+Start a service
+sudo systemctl start service-name
+Stop a service
+sudo systemctl stop service-name
+Restart a service
+sudo systemctl restart service-name
+Enable a service at boot
+sudo systemctl enable service-name
+Disable a service at boot
+sudo systemctl disable service-name
+13. Listing Services
+
+I used:
+
+systemctl list-units --type=service
+
+to view services known to the system.
+
+The exact services available can differ depending on the Linux environment.
