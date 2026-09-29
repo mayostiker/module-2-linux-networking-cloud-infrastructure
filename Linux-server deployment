@@ -1,0 +1,162 @@
+# Day 9 — Deploy a Linux Server on AWS
+
+## Objective
+
+The objective was to deploy a Linux server in AWS, configure the operating system, secure remote access using SSH, deploy a web service, and test connectivity.
+
+## Architecture
+
+```text
+Windows PC
+    |
+    | SSH (TCP 22)
+    v
+AWS EC2 Instance
+    |
+    v
+Amazon Linux 2023
+    |
+    v
+Nginx Web Server
+    |
+    | HTTP (TCP 80)
+    v
+Web Browser
+
+1. EC2 Instance Creation
+
+An Amazon EC2 instance was created using Amazon Linux 2023.
+
+The instance was successfully launched and reached the Running state.
+
+Server Details
+Operating System: Amazon Linux 2023
+Architecture: x86_64
+Default SSH user: ec2-user
+Web server: Nginx
+SSH Port: 22
+HTTP Port: 80
+
+2. Security Group Configuration
+
+The EC2 Security Group was configured with the following inbound rules:
+
+Type	Protocol	Port	Source
+SSH	TCP	22	My IP
+HTTP	TCP	80	0.0.0.0/0
+Security Considerations
+
+SSH access was restricted to my IP address instead of allowing SSH access from the entire Internet.
+
+HTTP access was allowed from 0.0.0.0/0 because the purpose of the exercise was to make the web server accessible over the Internet.
+
+3. SSH Connection
+
+The EC2 instance was accessed remotely using SSH from Windows PowerShell.
+
+The private key was secured using:
+
+chmod 400 mylinuxKP.pem
+
+The connection was successfully established using the EC2 key pair.
+
+The first connection displayed the SSH host authenticity confirmation, after which the server was added to the local known_hosts file.
+
+4. Verify Linux Server
+
+After connecting to the server, the following commands were used.
+
+Check Current User
+whoami
+
+Output:
+
+ec2-user
+Check Operating System
+cat /etc/os-release
+
+The server was confirmed to be running:
+NAME="Amazon Linux"
+VERSION="2023"
+ID="amzn"
+ID_LIKE="fedora"
+
+uname -a
+Linux ip-172-31-20-127.ec2.internal 6.18.51-120.162.amzn2023.x86_64 #2 SMP PREEMPT_DYNAMIC Wed Sep 23 18:50:41 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+The server was confirmed to be running the Amazon Linux 2023 kernel on an x86_64 architecture.
+
+Check Hostname
+hostname
+
+The server hostname was:
+ip-172-31-20-127.ec2.internal
+
+5. Update the Linux Server
+
+The installed packages were checked and updated using:
+
+sudo dnf update -y
+
+The result was:
+
+Dependencies resolved.
+Nothing to do.
+Complete!
+
+This confirmed that there were no updates required at the time of the check.
+
+6. Install Nginx
+
+Nginx was installed using the Amazon Linux package manager:
+
+sudo dnf install nginx -y
+
+The installation was successful.
+
+The installed Nginx version was verified using:
+
+nginx -v
+
+Output:
+
+nginx version: nginx/1.30.5
+
+7. Start Nginx
+The Nginx service was started using:
+
+sudo systemctl start nginx
+
+Its status was then checked:
+
+sudo systemctl status nginx
+
+The service was confirmed to be:
+
+Active: active (running)
+
+The Nginx configuration was also successfully validated:
+
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+8. Enable Nginx at Boot
+
+Nginx was configured to start automatically whenever the server boots:
+
+sudo systemctl enable nginx
+
+The command successfully created the required systemd symbolic link.
+
+9. Test Nginx Locally
+
+Nginx was tested from inside the EC2 instance using:
+
+curl http://localhost
+
+The command returned the Nginx Welcome page HTML.
+
+This confirmed that:
+
+Nginx is installed.
+Nginx is running.
+Nginx is listening for HTTP requests.
+The local web server is responding correctly.
